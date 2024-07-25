@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>คำนวณภาษีรายปี</title>
+    <script>
+        function calculateTax() {
+            const annualIncome = parseFloat(document.getElementById("annualIncome").value);
+            let tax = 0;
+
+            const taxBrackets = [
+                { limit: 150000, rate: 0 },
+                { limit: 300000, rate: 0.05 },
+                { limit: 500000, rate: 0.1 },
+                { limit: 750000, rate: 0.15 },
+                { limit: 1000000, rate: 0.2 },
+                { limit: 2000000, rate: 0.25 },
+                { limit: 5000000, rate: 0.3 },
+                { limit: Infinity, rate: 0.35 }
+            ];
+
+            let previousLimit = 0;
+
+            for (const bracket of taxBrackets) {
+                if (annualIncome > bracket.limit) {
+                    tax += (bracket.limit - previousLimit) * bracket.rate;
+                } else {
+                    tax += (annualIncome - previousLimit) * bracket.rate;
+                    break;
+                }
+                previousLimit = bracket.limit;
+            }
+
+            document.getElementById("tax").innerText = "ภาษีที่ต้องจ่าย: " + tax.toFixed(2) + " บาท";
+        }
+    </script>
+</head>
+<body>
+    <h1>คำนวณภาษีรายปี</h1>
+    <label for="annualIncome">รายได้ต่อปี (บาท): </label>
+    <input type="number" id="annualIncome" name="annualIncome" min="0" step="0.01">
+    <button onclick="calculateTax()">คำนวณภาษี</button>
+    <p id="tax">ภาษีที่ต้องจ่าย: </p>
+</body>
+</html>
